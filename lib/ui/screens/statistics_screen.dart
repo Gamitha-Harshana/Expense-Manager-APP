@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../providers/expense_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../core/utils.dart';
 
 class StatisticsScreen extends StatelessWidget {
@@ -17,6 +18,7 @@ class StatisticsScreen extends StatelessWidget {
         builder: (context, provider, child) {
           final expenses = provider.expenses;
           final categories = provider.categories;
+          final currency = Provider.of<SettingsProvider>(context).currencySymbol;
 
           if (expenses.isEmpty) {
             return const Center(child: Text('No expenses to analyze.'));
@@ -66,7 +68,7 @@ class StatisticsScreen extends StatelessWidget {
                       children: [
                         const Text('Total'),
                         Text(
-                          AppUtils.formatCurrency(provider.totalExpenses),
+                          AppUtils.formatCurrency(provider.totalExpenses, symbol: currency),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -96,7 +98,7 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       title: Text(category.name),
                       trailing: Text(
-                        AppUtils.formatCurrency(total),
+                        AppUtils.formatCurrency(total, symbol: currency),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     );

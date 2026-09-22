@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/expense_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../core/utils.dart';
 import 'add_expense_screen.dart';
+import 'settings_screen.dart';
+import 'monthly_report_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final currency = Provider.of<SettingsProvider>(context).currencySymbol;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Manager'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.notifications),
+            tooltip: 'Monthly Report',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MonthlyReportScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {},
+            tooltip: 'Settings',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
           ),
         ],
       ),
@@ -41,7 +62,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            AppUtils.formatCurrency(total),
+                            AppUtils.formatCurrency(total, symbol: currency),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 32,
@@ -75,19 +96,21 @@ class DashboardScreen extends StatelessWidget {
                     (context, index) {
                       final expense = recentExpenses[index];
                       final category = provider.getCategoryById(expense.categoryId);
-                      final icon = _getIconData(category?.iconName ?? 'attach_money');
 
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: category != null 
-                              ? Color(category.colorValue) 
+                          backgroundColor: category != null
+                              ? Color(category.colorValue)
                               : Colors.grey,
-                          child: Icon(icon, color: Colors.white),
+                          child: Icon(
+                            AppUtils.getIconData(category?.iconName ?? ''),
+                            color: Colors.white,
+                          ),
                         ),
                         title: Text(expense.title),
                         subtitle: Text(AppUtils.formatDate(expense.date)),
                         trailing: Text(
-                          AppUtils.formatCurrency(expense.amount),
+                          AppUtils.formatCurrency(expense.amount, symbol: currency),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.redAccent,
@@ -112,16 +135,5 @@ class DashboardScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case 'restaurant': return Icons.restaurant;
-      case 'directions_car': return Icons.directions_car;
-      case 'shopping_bag': return Icons.shopping_bag;
-      case 'receipt': return Icons.receipt;
-      case 'movie': return Icons.movie;
-      default: return Icons.attach_money;
-    }
   }
 }

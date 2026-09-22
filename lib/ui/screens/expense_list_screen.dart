@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/expense_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../core/utils.dart';
 import 'add_expense_screen.dart';
 
@@ -16,6 +17,7 @@ class ExpenseListScreen extends StatelessWidget {
       body: Consumer<ExpenseProvider>(
         builder: (context, provider, child) {
           final expenses = provider.expenses;
+          final currency = Provider.of<SettingsProvider>(context).currencySymbol;
 
           if (expenses.isEmpty) {
             return const Center(child: Text('No expenses recorded.'));
@@ -53,7 +55,7 @@ class ExpenseListScreen extends StatelessWidget {
                   title: Text(expense.title),
                   subtitle: Text('${AppUtils.formatDate(expense.date)} • ${category?.name ?? 'Unknown'}'),
                   trailing: Text(
-                    AppUtils.formatCurrency(expense.amount),
+                    AppUtils.formatCurrency(expense.amount, symbol: currency),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.redAccent,

@@ -47,36 +47,7 @@ class MonthlyReportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Current Month Card
-            Card(
-              color: Theme.of(context).colorScheme.primary,
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    Text(
-                      _getMonthName(now.month) + ' ${now.year}',
-                      style: const TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppUtils.formatCurrency(currentTotal, symbol: currency),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${currentMonthExpenses.length} transactions',
-                      style: const TextStyle(color: Colors.white60, fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
+
 
             // Comparison Card
             Card(
@@ -238,11 +209,5 @@ class MonthlyReportScreen extends StatelessWidget {
     );
   }
 
-  String _getMonthName(int month) {
-    const months = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[month];
-  }
+
 }

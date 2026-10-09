@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
 import 'expense_list_screen.dart';
+import 'monthly_report_screen.dart';
 import 'statistics_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final _screens = const [
     DashboardScreen(),
     ExpenseListScreen(),
+    MonthlyReportScreen(),
     StatisticsScreen(),
   ];
 
@@ -40,6 +42,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.list_alt),
             selectedIcon: Icon(Icons.list),
             label: 'Expenses',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.summarize_outlined),
+            selectedIcon: Icon(Icons.summarize),
+            label: 'Report',
           ),
           NavigationDestination(
             icon: Icon(Icons.pie_chart_outline),

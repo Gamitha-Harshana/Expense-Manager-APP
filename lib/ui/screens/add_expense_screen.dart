@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/expense_provider.dart';
+import '../../providers/settings_provider.dart';
 import '../../models/expense.dart';
 import '../../models/category.dart';
 import '../../core/utils.dart';
@@ -79,16 +80,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                decoration: const InputDecoration(
-                  prefixText: '\$ ',
-                  labelText: 'Amount',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (val) => val == null || val.isEmpty ? 'Enter amount' : null,
+              Builder(
+                builder: (context) {
+                  final currency = Provider.of<SettingsProvider>(context).currencySymbol;
+                  return TextFormField(
+                    controller: _amountController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      prefixText: '$currency ',
+                      labelText: 'Amount',
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (val) => val == null || val.isEmpty ? 'Enter amount' : null,
+                  );
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -104,23 +109,73 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.category_outlined),
                 ),
                 isExpanded: true,
+                menuMaxHeight: 280,
+                borderRadius: BorderRadius.circular(16),
+                dropdownColor: Theme.of(context).cardTheme.color ??
+                    Theme.of(context).colorScheme.surface,
+                elevation: 4,
                 value: _selectedCategory,
-                items: categories.map((cat) {
-                  return DropdownMenuItem(
-                    value: cat,
-                    child: Row(
+                hint: const Text('Select a category'),
+                selectedItemBuilder: (context) {
+                  return categories.map((cat) {
+                    return Row(
                       children: [
-                        Icon(AppUtils.getIconData(cat.iconName), color: Color(cat.colorValue)),
-                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Color(cat.colorValue),
+                          child: Icon(
+                            AppUtils.getIconData(cat.iconName),
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             cat.name,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
+                    );
+                  }).toList();
+                },
+                items: categories.map((cat) {
+                  return DropdownMenuItem(
+                    value: cat,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 14,
+                            backgroundColor: Color(cat.colorValue),
+                            child: Icon(
+                              AppUtils.getIconData(cat.iconName),
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              cat.name,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }).toList(),

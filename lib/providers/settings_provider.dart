@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../core/constants.dart';
+import '../core/theme.dart';
 
 class SettingsProvider extends ChangeNotifier {
   final _settingsBox = Hive.box(AppConstants.settingsBox);
+
+  static const Color defaultPrimaryColor = Color(0xFF7C5CFF);
+
+  SettingsProvider() {
+    // Synchronize AppTheme with persisted color on startup
+    AppTheme.setPrimaryColor(primaryColor);
+  }
 
   // Theme logic
   ThemeMode get themeMode {
@@ -22,8 +30,23 @@ class SettingsProvider extends ChangeNotifier {
     String modeString = 'system';
     if (mode == ThemeMode.light) modeString = 'light';
     if (mode == ThemeMode.dark) modeString = 'dark';
-    
+
     await _settingsBox.put('themeMode', modeString);
+    notifyListeners();
+  }
+
+  // App UI Accent Color logic
+  Color get primaryColor {
+    final colorVal = _settingsBox.get(
+      'primaryColor',
+      defaultValue: defaultPrimaryColor.value,
+    );
+    return Color(colorVal);
+  }
+
+  Future<void> setPrimaryColor(Color color) async {
+    await _settingsBox.put('primaryColor', color.value);
+    AppTheme.setPrimaryColor(color);
     notifyListeners();
   }
 

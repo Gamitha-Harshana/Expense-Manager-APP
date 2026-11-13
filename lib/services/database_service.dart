@@ -16,6 +16,7 @@ class DatabaseService {
     await Hive.openBox<Expense>(AppConstants.expenseBox);
     await Hive.openBox<ExpenseCategory>(AppConstants.categoryBox);
     await Hive.openBox(AppConstants.settingsBox);
+    await Hive.openBox(AppConstants.todoBox);
 
     // Initialize default categories if empty
     final categoryBox = Hive.box<ExpenseCategory>(AppConstants.categoryBox);

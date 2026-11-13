@@ -3,4 +3,5 @@ class AppConstants {
   static const String expenseBox = 'expenses';
   static const String categoryBox = 'categories';
   static const String settingsBox = 'settings';
+  static const String todoBox = 'financial_todos';
 }

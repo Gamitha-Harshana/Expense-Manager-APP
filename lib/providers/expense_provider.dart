@@ -48,6 +48,16 @@ class ExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateCategory(ExpenseCategory category) async {
+    await category.save();
+    notifyListeners();
+  }
+
+  Future<void> deleteCategory(ExpenseCategory category) async {
+    await category.delete();
+    notifyListeners();
+  }
+
   ExpenseCategory? getCategoryById(String id) {
     return _categoryBox.get(id);
   }
